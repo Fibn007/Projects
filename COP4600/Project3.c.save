@@ -1,0 +1,89 @@
+//Fabian Demiro 02046975
+#define _REENTRANT
+#include <pthread.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <semaphore.h>
+#include <iostream>
+#include <cstdlib>
+
+int buffer[15];
+void Producer();
+void Consumer();
+
+
+
+int main(void)
+{
+	
+	int pid, pid1;
+	pthread_t	tid1[1];     /* process id for thread 1 */
+        pthread_t	tid2[1];     /* process id for thread 2 */
+        pthread_attr_t	attr[1];     /* attribute pointer array */
+	fflush(stdout);
+
+	/* Required to schedule thread independently.*/
+        pthread_attr_init(&attr[0]);
+        pthread_attr_setscope(&attr[0], PTHREAD_SCOPE_SYSTEM);  
+	/* end to schedule thread independently */
+
+       /* Create the threads */
+        pthread_create(&tid1[0], &attr[0], thread1, NULL);
+        pthread_create(&tid2[0], &attr[0], thread2, NULL);
+
+	if((pid = fork() == 0)
+	{
+		Producer();
+	}
+
+	if((pid != 0) && (pid1 = fork() == 0)
+	{
+		Consumer();
+	}
+			
+
+}
+
+void Producer()
+{
+
+char newChar;
+FILE *fp;
+
+
+
+do {
+	wait(empty);
+	wait(mutex);
+
+	fp = fopen("mytest.dat", "r");
+	while(fscanf(fp,"%c", &newChar) != "*");
+	close(fp);
+
+	signal(mutex);
+	signal(full);
+} while(TRUE);
+
+}
+
+void Consumer()
+{
+
+char newChar;
+FIL *fp;
+
+do {
+	wait(full);
+	wait(mutex);
+
+	fp = fopen("outputfile.dat", "w");
+	while(fprintf
+	signal(mutex);
+	signal(empty);
+} while(TRUE);
+
+}
